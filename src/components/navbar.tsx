@@ -2,13 +2,11 @@
 
 import React, { useState } from "react";
 import { Compass, ShieldCheck, Sparkles, RefreshCw, ChevronDown, Palette } from "lucide-react";
-import { DEMO_PROFILES } from "@/lib/demo-data";
 import { PrivacyModal } from "./privacy-modal";
 
 export type BgVariant = "grid" | "soft" | "contrast";
 
 interface NavbarProps {
-  onSelectDemoProfile: (department: string) => void;
   onReset: () => void;
   hasActiveReport: boolean;
   userXp?: number;
@@ -17,7 +15,6 @@ interface NavbarProps {
 }
 
 export function Navbar({
-  onSelectDemoProfile,
   onReset,
   hasActiveReport,
   userXp,
@@ -25,7 +22,6 @@ export function Navbar({
   onChangeBgVariant,
 }: NavbarProps) {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
-  const [isDemoDropdownOpen, setIsDemoDropdownOpen] = useState(false);
   const [isBgMenuOpen, setIsBgMenuOpen] = useState(false);
 
   const bgLabels: Record<BgVariant, string> = {
@@ -48,7 +44,7 @@ export function Navbar({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold tracking-tight text-slate-900">
-                  SkillPath<span className="text-indigo-600"> AI</span>
+                  SkillPath<span className="text-indigo-600">AI</span>
                 </span>
                 <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
                   EdTech Intelligence
@@ -114,54 +110,6 @@ export function Navbar({
                 )}
               </div>
             )}
-
-            {/* Quick Demo Selector Dropdown */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsDemoDropdownOpen(!isDemoDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
-                title="Quickly test with realistic student profiles"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span className="hidden xs:inline">Sample Profiles</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-
-              {isDemoDropdownOpen && (
-                <div
-                  className="absolute right-0 mt-2 w-72 rounded-xl border border-slate-200 bg-white shadow-xl p-2 z-50 animate-fade-in"
-                  onMouseLeave={() => setIsDemoDropdownOpen(false)}
-                >
-                  <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Load Student Profile
-                  </div>
-                  {["CSE", "EEE", "BBA", "Pharmacy", "Other"].map((dept) => {
-                    const prof = DEMO_PROFILES[dept];
-                    if (!prof) return null;
-                    return (
-                      <button
-                        key={dept}
-                        type="button"
-                        onClick={() => {
-                          onSelectDemoProfile(dept);
-                          setIsDemoDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-2.5 py-2 rounded-lg text-xs hover:bg-indigo-50 hover:text-indigo-900 transition-colors flex flex-col gap-0.5 cursor-pointer"
-                      >
-                        <div className="flex items-center justify-between font-semibold text-slate-800">
-                          <span>{prof.department} • Sem {prof.semester}</span>
-                          <span className="text-[10px] text-slate-400 font-normal">{prof.careerLevel}</span>
-                        </div>
-                        <span className="text-[11px] text-indigo-600 truncate">
-                          Target: {prof.targetRole}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
 
             {/* Privacy Modal trigger */}
             <button

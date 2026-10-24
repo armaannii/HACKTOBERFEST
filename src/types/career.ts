@@ -24,7 +24,6 @@ export const AnalysisRequestSchema = z.object({
   market: MarketPreferenceEnum.default("Both"),
   weeklyHours: z.coerce.number().min(1).max(80).default(15),
   learningStyle: LearningStyleEnum.default("Mixed"),
-  isDemo: z.boolean().optional(),
 });
 
 export type AnalysisRequest = z.infer<typeof AnalysisRequestSchema>;

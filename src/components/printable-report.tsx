@@ -8,7 +8,6 @@ interface PrintableReportProps {
   department: string;
   semester: number;
   overallScore: number;
-  isDemo?: boolean;
 }
 
 export function PrintableReport({
@@ -16,7 +15,6 @@ export function PrintableReport({
   department,
   semester,
   overallScore,
-  isDemo,
 }: PrintableReportProps) {
   const handlePrint = () => {
     window.print();
@@ -91,12 +89,6 @@ export function PrintableReport({
             <strong>Date Generated:</strong> {today}
           </div>
         </div>
-
-        {isDemo && (
-          <p className="text-[10px] text-gray-500 italic mt-2">
-            * Sample demonstration assessment profile.
-          </p>
-        )}
       </div>
     </>
   );

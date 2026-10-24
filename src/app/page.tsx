@@ -16,7 +16,6 @@ import { MarketInsights } from "@/components/market-insights";
 import { PrintableReport } from "@/components/printable-report";
 import { GamificationBar } from "@/components/gamification-bar";
 import { AnalysisResult } from "@/types/career";
-import { DEMO_PROFILES } from "@/lib/demo-data";
 import {
   getGamificationState,
   GamificationProfile,
@@ -47,7 +46,6 @@ type DashboardTab =
 
 export default function Home() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
-  const [isDemo, setIsDemo] = useState<boolean>(false);
   const [targetRole, setTargetRole] = useState<string>("Full-Stack Developer");
   const [department, setDepartment] = useState<string>("CSE");
   const [semester, setSemester] = useState<number>(5);
@@ -58,9 +56,13 @@ export default function Home() {
   const [bgVariant, setBgVariant] = useState<BgVariant>("grid");
 
   // Local Gamification Profile
-  const [gamification, setGamification] = useState<GamificationProfile>(() => getGamificationState());
+  // Initialize as null to avoid SSR/client hydration mismatch (localStorage is client-only)
+  const [gamification, setGamification] = useState<GamificationProfile | null>(null);
 
   useEffect(() => {
+    // Load from localStorage only on the client after mount
+    setGamification(getGamificationState());
+
     const handleUpdate = () => {
       setGamification(getGamificationState());
     };
@@ -70,27 +72,6 @@ export default function Home() {
     };
   }, []);
 
-  // Quick demo profile loader from Navbar or buttons
-  const handleSelectDemoProfile = (deptKey: string) => {
-    const profile = DEMO_PROFILES[deptKey] || DEMO_PROFILES.CSE;
-    if (profile) {
-      setDepartment(profile.department);
-      setSemester(profile.semester);
-      setTargetRole(profile.targetRole);
-      setAnalysisResult(profile.sampleResult);
-      setIsDemo(true);
-      setServerError(null);
-      setActiveTab("all");
-
-      // Award initial analysis badge & XP
-      addXp(20, "badge-analyzed");
-
-      // Smooth scroll to results
-      setTimeout(() => {
-        document.getElementById("results-dashboard")?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-  };
 
   const handleReset = () => {
     setAnalysisResult(null);
@@ -146,7 +127,6 @@ export default function Home() {
 
       if (resJson.success && resJson.data) {
         setAnalysisResult(resJson.data);
-        setIsDemo(Boolean(resJson.isDemo));
         setActiveTab("all");
 
         // Award XP
@@ -184,10 +164,9 @@ export default function Home() {
 
       {/* Navigation Bar */}
       <Navbar
-        onSelectDemoProfile={handleSelectDemoProfile}
         onReset={handleReset}
         hasActiveReport={Boolean(analysisResult)}
-        userXp={gamification.xp}
+        userXp={gamification?.xp}
         bgVariant={bgVariant}
         onChangeBgVariant={setBgVariant}
       />
@@ -235,7 +214,6 @@ export default function Home() {
           <AnalysisForm
             onSubmit={handleSubmitAnalysis}
             isLoading={isLoading}
-            onLoadDemoProfile={handleSelectDemoProfile}
             serverError={serverError}
           />
         </section>
@@ -276,15 +254,9 @@ export default function Home() {
                   <span className="text-xs font-bold text-gray-500 uppercase tracking-wider print-text-muted">
                     Career Analysis Result
                   </span>
-                  {isDemo ? (
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 print-badge">
-                      Sample Student Profile
-                    </span>
-                  ) : (
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 print-badge">
-                      Live AI Evaluated
-                    </span>
-                  )}
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 print-badge">
+                    Live AI Evaluated
+                  </span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 print-text-dark">
                   {targetRole} <span className="text-gray-500 text-sm font-normal">({department} • Semester {semester})</span>
@@ -318,7 +290,6 @@ export default function Home() {
               department={department}
               semester={semester}
               overallScore={analysisResult.overall_score}
-              isDemo={isDemo}
             />
 
             {/* Navigation Tabs for Easy Deep Diving */}
@@ -461,7 +432,7 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-4">
-            <span>Powered by Qwen-2.5 on Hugging Face</span>
+            <span>Powered by Pollinations.ai Free API</span>
             <span>•</span>
             <span>Supports CSE, EEE, BBA, Pharmacy & Custom Faculties</span>
           </div>

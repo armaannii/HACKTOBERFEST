@@ -1,0 +1,115 @@
+{
+  "overall_score": 72,
+  "score_breakdown": {
+    "technical_skills": 78,
+    "projects": 62,
+    "experience": 38,
+    "role_alignment": 70
+  },
+  "score_explanation": "The candidate demonstrates solid foundational frontend skills and a relevant project, but lacks depth in modern tooling, state management, and testing. Experience is limited to coursework, and the role alignment is moderate due to missing advanced frontend practices.",
+  "key_strengths": [
+    "Strong command of core web technologies (HTML5, CSS3, JavaScript)",
+    "Experience building a responsive e-commerce application",
+    "Proficiency with React and Git version control"
+  ],
+  "missing_skills": [
+    {
+      "skill": "TypeScript",
+      "importance": "High",
+      "job_market": "Global",
+      "reason": "TypeScript is increasingly required for large-scale React projects to improve maintainability and catch bugs early.",
+      "recommended_action": "Complete an online TypeScript course and refactor the existing e-commerce app to use TS.",
+      "estimated_learning_hours": 80
+    },
+    {
+      "skill": "Redux (or Context API + useReducer)",
+      "importance": "High",
+      "job_market": "Global",
+      "reason": "Advanced state management is essential for complex frontend applications and is a common interview topic.",
+      "recommended_action": "Build a small project that uses Redux for global state and integrate it into the e-commerce app.",
+      "estimated_learning_hours": 60
+    },
+    {
+      "skill": "Unit & Integration Testing (Jest, React Testing Library)",
+      "importance": "Medium",
+      "job_market": "Global",
+      "reason": "Testing skills are increasingly valued for ensuring code quality and reliability.",
+      "recommended_action": "Write tests for key components of the e-commerce app.",
+      "estimated_learning_hours": 40
+    },
+    {
+      "skill": "Accessibility (WCAG, ARIA)",
+      "importance": "Medium",
+      "job_market": "Global",
+      "reason": "Accessibility compliance is a legal and user experience requirement for many companies.",
+      "recommended_action": "Audit the current app for accessibility gaps and fix them.",
+      "estimated_learning_hours": 30
+    },
+    {
+      "skill": "CSS Preprocessors / Utility-First Frameworks (Sass, Tailwind CSS)",
+      "importance": "Low",
+      "job_market": "Bangladesh",
+      "reason": "These tools improve styling efficiency and are common in local startups.",
+      "recommended_action": "Add Tailwind CSS to the project and refactor styles.",
+      "estimated_learning_hours": 20
+    }
+  ],
+  "semester_roadmap": [
+    {
+      "semester": "Semester 6",
+      "focus_area": "Deepen frontend fundamentals",
+      "actionable_tasks": [
+        "Complete a TypeScript fundamentals course",
+        "Refactor e-commerce app to TypeScript",
+        "Add Redux for state management"
+      ],
+      "recommended_courses_or_certifications": [
+        "Udemy: TypeScript for Beginners",
+        "Coursera: Advanced React and Redux"
+      ],
+      "portfolio_project": "Full-stack e-commerce app with TypeScript, Redux, and unit tests",
+      "milestones": [
+        "TypeScript integration complete",
+        "Redux state flow documented",
+        "Unit tests covering 70% of components"
+      ]
+    },
+    {
+      "semester": "Semester 7",
+      "focus_area": "Testing & Accessibility",
+      "actionable_tasks": [
+        "Implement Jest and React Testing Library",
+        "Conduct accessibility audit and fix issues",
+        "Deploy app to a cloud platform"
+      ],
+      "recommended_courses_or_certifications": [
+        "Pluralsight: Testing React Applications",
+        "Udacity: Accessibility for Frontend Developers"
+      ],
+      "portfolio_project": "Accessibility‑compliant e-commerce app with CI/CD pipeline",
+      "milestones": [
+        "Test coverage > 80%",
+        "WCAG 2.1 AA compliance",
+        "Automated deployment pipeline"
+      ]
+    }
+  ],
+  "resume_formatting_tips": [
+    "Use bullet points with action verbs and quantify results (e.g., \"Built a responsive e-commerce site with 95% mobile conversion rate\").",
+    "Include a concise tech stack section highlighting React, TypeScript, Redux, Jest, Git.",
+    "Add links to live demos or GitHub repositories for each project.",
+    "Keep the resume to one page; prioritize recent, relevant experience.",
+    "Use a clean, professional layout with consistent formatting."
+  ],
+  "recommended_projects": [
+    {
+      "title": "Personal Portfolio Website",
+      "difficulty": "Beginner",
+      "skills_demonstrated": [
+        "React",
+        "CSS3",
+        "Responsive Design"
+      ],
+      "deliverables": [
+        "Live website hosted on Netlify",
+        "GitHub

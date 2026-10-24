@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { extractTextFromPDF } from "@/lib/pdf-parser";
-import { runCareerAnalysis, getHfToken } from "@/lib/huggingface";
-import { DEMO_PROFILES } from "@/lib/demo-data";
+import { runCareerAnalysis } from "@/lib/huggingface";
 import { AnalysisRequestSchema } from "@/types/career";
 import { z } from "zod";
 
-export const maxDuration = 60; // Allow up to 60 seconds for AI inference
+export const maxDuration = 90; // Allow up to 90 seconds for AI inference
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,7 +19,6 @@ export async function POST(req: NextRequest) {
     let weeklyHours: string | number | undefined = undefined;
     let learningStyle: string | undefined = undefined;
     let resumeText = "";
-    let isDemo = false;
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await req.formData();
@@ -33,7 +31,6 @@ export async function POST(req: NextRequest) {
       market = (formData.get("market") as string) || undefined;
       weeklyHours = (formData.get("weeklyHours") as string) || undefined;
       learningStyle = (formData.get("learningStyle") as string) || undefined;
-      isDemo = formData.get("isDemo") === "true";
 
       const file = formData.get("resumeFile") as File | null;
       const textParam = formData.get("resumeText") as string | null;
@@ -79,7 +76,6 @@ export async function POST(req: NextRequest) {
       weeklyHours = json.weeklyHours;
       learningStyle = json.learningStyle;
       resumeText = json.resumeText || "";
-      isDemo = Boolean(json.isDemo);
     } else {
       return NextResponse.json(
         { error: "Unsupported Content-Type. Use multipart/form-data or application/json." },
@@ -98,39 +94,13 @@ export async function POST(req: NextRequest) {
       market: market || "Both",
       weeklyHours: weeklyHours ? Number(weeklyHours) : 15,
       learningStyle: learningStyle || "Mixed",
-      isDemo,
     });
 
-    // Check if demo mode was requested
-    if (validatedInput.isDemo) {
-      const deptKey = validatedInput.department in DEMO_PROFILES ? validatedInput.department : "Other";
-      const demoProfile = DEMO_PROFILES[deptKey] || DEMO_PROFILES.CSE;
-      return NextResponse.json({
-        success: true,
-        isDemo: true,
-        data: demoProfile.sampleResult,
-      });
-    }
-
-    // Live AI inference
-    const token = getHfToken();
-    const hasToken = Boolean(token);
-    if (!hasToken) {
-      return NextResponse.json(
-        {
-          error:
-            "HF_TOKEN is not configured on the server. Please add your Hugging Face Access Token to .env.local to enable live AI analysis, or test using the verified Sample Demo Mode.",
-          code: "HF_TOKEN_MISSING",
-        },
-        { status: 503 }
-      );
-    }
-
+    // Run live AI inference
     const analysis = await runCareerAnalysis(validatedInput);
 
     return NextResponse.json({
       success: true,
-      isDemo: false,
       data: analysis,
     });
   } catch (error: unknown) {

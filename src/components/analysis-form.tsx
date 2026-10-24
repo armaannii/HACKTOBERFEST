@@ -7,7 +7,7 @@ import {
   LearningStyle,
   PREDEFINED_ROLES,
 } from "@/types/career";
-import { DEMO_PROFILES } from "@/lib/demo-data";
+
 import {
   UploadCloud,
   FileText,
@@ -24,7 +24,6 @@ import {
 interface AnalysisFormProps {
   onSubmit: (formData: FormData | object, isMultipart: boolean) => Promise<void>;
   isLoading: boolean;
-  onLoadDemoProfile: (department: string) => void;
   serverError: string | null;
 }
 
@@ -41,7 +40,6 @@ const POPULAR_CUSTOM_DEPTS = [
 export function AnalysisForm({
   onSubmit,
   isLoading,
-  onLoadDemoProfile,
   serverError,
 }: AnalysisFormProps) {
   // Academic Profile
@@ -68,7 +66,7 @@ export function AnalysisForm({
   const [market, setMarket] = useState<MarketPreference>("Both");
   const [weeklyHours, setWeeklyHours] = useState<number>(15);
   const [learningStyle, setLearningStyle] = useState<LearningStyle>("Projects");
-  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
+
 
   // Local validation error
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -118,20 +116,7 @@ export function AnalysisForm({
     }
   };
 
-  // Quick fill with sample student resume
-  const handleLoadSampleText = () => {
-    const key = isCustomDept ? "Other" : selectedDeptKey;
-    const sample = DEMO_PROFILES[key] || DEMO_PROFILES.CSE;
-    if (sample) {
-      setResumeText(sample.resumeText);
-      setSemester(sample.semester);
-      setGraduationYear(sample.graduationYear);
-      setSelectedRole(sample.targetRole);
-      setIsCustomRole(false);
-      setWeeklyHours(sample.weeklyHours);
-      setValidationError(null);
-    }
-  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +153,6 @@ export function AnalysisForm({
       fd.append("weeklyHours", String(weeklyHours));
       fd.append("learningStyle", learningStyle);
       fd.append("resumeFile", pdfFile);
-      if (isDemoMode) fd.append("isDemo", "true");
 
       await onSubmit(fd, true);
     } else {
@@ -189,7 +173,6 @@ export function AnalysisForm({
         weeklyHours,
         learningStyle,
         resumeText: resumeText.trim(),
-        isDemo: isDemoMode,
       };
 
       await onSubmit(payload, false);
@@ -503,14 +486,6 @@ export function AnalysisForm({
               <span className="text-xs text-gray-500">
                 Paste your resume, skills, coursework, and projects:
               </span>
-              <button
-                type="button"
-                onClick={handleLoadSampleText}
-                className="flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>Fill with {isCustomDept ? "Sample" : selectedDeptKey} Resume</span>
-              </button>
             </div>
             <textarea
               rows={8}
@@ -636,27 +611,12 @@ export function AnalysisForm({
           <div className="space-y-1">
             <span className="font-bold text-amber-900">Analysis Notice:</span>
             <p>{serverError}</p>
-            <p className="text-[11px] text-amber-700">
-              Tip: You can enable "Fast Demo Mode" below to preview the complete roadmap dashboard instantly.
-            </p>
           </div>
         </div>
       )}
 
-      {/* Submit Action & Demo Mode Toggle */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-        <label className="flex items-center gap-2.5 text-xs text-gray-700 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={isDemoMode}
-            onChange={(e) => setIsDemoMode(e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-          />
-          <span className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            Fast Demo Mode (Instant evaluation without AI token)
-          </span>
-        </label>
+      {/* Submit Action */}
+      <div className="flex flex-col sm:flex-row items-center justify-end gap-4 pt-2">
 
         <button
           type="submit"
