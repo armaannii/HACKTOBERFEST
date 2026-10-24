@@ -1,24 +1,42 @@
 "use client";
 
 import React, { useState } from "react";
-import { Compass, ShieldCheck, Sparkles, RefreshCw, ChevronDown } from "lucide-react";
+import { Compass, ShieldCheck, Sparkles, RefreshCw, ChevronDown, Palette } from "lucide-react";
 import { DEMO_PROFILES } from "@/lib/demo-data";
 import { PrivacyModal } from "./privacy-modal";
+
+export type BgVariant = "grid" | "soft" | "contrast";
 
 interface NavbarProps {
   onSelectDemoProfile: (department: string) => void;
   onReset: () => void;
   hasActiveReport: boolean;
   userXp?: number;
+  bgVariant?: BgVariant;
+  onChangeBgVariant?: (variant: BgVariant) => void;
 }
 
-export function Navbar({ onSelectDemoProfile, onReset, hasActiveReport, userXp }: NavbarProps) {
+export function Navbar({
+  onSelectDemoProfile,
+  onReset,
+  hasActiveReport,
+  userXp,
+  bgVariant = "grid",
+  onChangeBgVariant,
+}: NavbarProps) {
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isDemoDropdownOpen, setIsDemoDropdownOpen] = useState(false);
+  const [isBgMenuOpen, setIsBgMenuOpen] = useState(false);
+
+  const bgLabels: Record<BgVariant, string> = {
+    grid: "Dot Grid & Glow",
+    soft: "Soft Gradient",
+    contrast: "High Contrast Grid",
+  };
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-gray-200 bg-white/95 backdrop-blur-md shadow-xs">
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Logo & Name */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={onReset}>
@@ -29,14 +47,14 @@ export function Navbar({ onSelectDemoProfile, onReset, hasActiveReport, userXp }
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold tracking-tight text-gray-900">
+                <span className="text-lg font-bold tracking-tight text-slate-900">
                   SkillPath<span className="text-indigo-600"> AI</span>
                 </span>
-                <span className="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span className="hidden sm:inline-flex items-center px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
                   EdTech Intelligence
                 </span>
               </div>
-              <p className="hidden md:block text-[11px] text-gray-500 font-medium">
+              <p className="hidden md:block text-[11px] text-slate-500 font-medium">
                 Know your gaps. Build your skills. Own your future.
               </p>
             </div>
@@ -52,25 +70,70 @@ export function Navbar({ onSelectDemoProfile, onReset, hasActiveReport, userXp }
               </div>
             )}
 
+            {/* Background Style Switcher */}
+            {onChangeBgVariant && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsBgMenuOpen(!isBgMenuOpen)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+                  title="Switch background visual style for optimal contrast"
+                >
+                  <Palette className="w-3.5 h-3.5 text-indigo-600" />
+                  <span className="hidden lg:inline text-[11px]">BG: {bgLabels[bgVariant]}</span>
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
+                </button>
+
+                {isBgMenuOpen && (
+                  <div
+                    className="absolute right-0 mt-2 w-52 rounded-xl border border-slate-200 bg-white shadow-xl p-2 z-50 animate-fade-in"
+                    onMouseLeave={() => setIsBgMenuOpen(false)}
+                  >
+                    <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Background Appearance
+                    </div>
+                    {(["grid", "soft", "contrast"] as BgVariant[]).map((mode) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => {
+                          onChangeBgVariant(mode);
+                          setIsBgMenuOpen(false);
+                        }}
+                        className={`w-full text-left px-2.5 py-2 rounded-lg text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${
+                          bgVariant === mode
+                            ? "bg-indigo-50 text-indigo-900 border border-indigo-200"
+                            : "text-slate-700 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span>{bgLabels[mode]}</span>
+                        {bgVariant === mode && <span className="text-indigo-600 font-bold">✓</span>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Quick Demo Selector Dropdown */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setIsDemoDropdownOpen(!isDemoDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
                 title="Quickly test with realistic student profiles"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 <span className="hidden xs:inline">Sample Profiles</span>
-                <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
               </button>
 
               {isDemoDropdownOpen && (
                 <div
-                  className="absolute right-0 mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-xl p-2 z-50 animate-fade-in"
+                  className="absolute right-0 mt-2 w-72 rounded-xl border border-slate-200 bg-white shadow-xl p-2 z-50 animate-fade-in"
                   onMouseLeave={() => setIsDemoDropdownOpen(false)}
                 >
-                  <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
                     Load Student Profile
                   </div>
                   {["CSE", "EEE", "BBA", "Pharmacy", "Other"].map((dept) => {
@@ -86,9 +149,9 @@ export function Navbar({ onSelectDemoProfile, onReset, hasActiveReport, userXp }
                         }}
                         className="w-full text-left px-2.5 py-2 rounded-lg text-xs hover:bg-indigo-50 hover:text-indigo-900 transition-colors flex flex-col gap-0.5 cursor-pointer"
                       >
-                        <div className="flex items-center justify-between font-semibold text-gray-800">
+                        <div className="flex items-center justify-between font-semibold text-slate-800">
                           <span>{prof.department} • Sem {prof.semester}</span>
-                          <span className="text-[10px] text-gray-400 font-normal">{prof.careerLevel}</span>
+                          <span className="text-[10px] text-slate-400 font-normal">{prof.careerLevel}</span>
                         </div>
                         <span className="text-[11px] text-indigo-600 truncate">
                           Target: {prof.targetRole}
@@ -104,7 +167,7 @@ export function Navbar({ onSelectDemoProfile, onReset, hasActiveReport, userXp }
             <button
               type="button"
               onClick={() => setIsPrivacyOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
               title="Read our data privacy commitment"
             >
               <ShieldCheck className="w-4 h-4 text-emerald-600" />

@@ -203,7 +203,7 @@ export function AnalysisForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Step 1: Academic Profile */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-xs">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-sm">
             1
@@ -342,7 +342,7 @@ export function AnalysisForm({
       </div>
 
       {/* Step 2: Target Career Goal */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-xs">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-sm">
             2
@@ -408,7 +408,7 @@ export function AnalysisForm({
       </div>
 
       {/* Step 3: Resume Input */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-xs">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-sm">
@@ -536,7 +536,7 @@ export function AnalysisForm({
       </div>
 
       {/* Step 4: Preferences */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-xs">
+      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow">
         <div className="flex items-center gap-3 mb-6">
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold text-sm">
             4

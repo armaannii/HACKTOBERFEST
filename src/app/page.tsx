@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Navbar } from "@/components/navbar";
+import { Navbar, BgVariant } from "@/components/navbar";
 import { AnalysisForm } from "@/components/analysis-form";
 import { ReadinessScore } from "@/components/readiness-score";
 import { StrengthsCard } from "@/components/strengths-card";
@@ -55,6 +55,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<DashboardTab>("all");
+  const [bgVariant, setBgVariant] = useState<BgVariant>("grid");
 
   // Local Gamification Profile
   const [gamification, setGamification] = useState<GamificationProfile>(() => getGamificationState());
@@ -169,14 +170,26 @@ export default function Home() {
 
   const missingSkillNames = (analysisResult?.missing_skills || []).map((s) => s.skill);
 
+  const bgClass =
+    bgVariant === "grid"
+      ? "bg-mesh-grid"
+      : bgVariant === "soft"
+      ? "bg-mesh-soft"
+      : "bg-mesh-contrast";
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#F0F7FF] text-gray-900 font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className={`min-h-screen flex flex-col ${bgClass} text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 transition-colors duration-300 relative`}>
+      {/* Soft Ambient Hero Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-80 bg-gradient-to-b from-indigo-200/40 via-sky-100/20 to-transparent blur-3xl pointer-events-none -z-10" />
+
       {/* Navigation Bar */}
       <Navbar
         onSelectDemoProfile={handleSelectDemoProfile}
         onReset={handleReset}
         hasActiveReport={Boolean(analysisResult)}
         userXp={gamification.xp}
+        bgVariant={bgVariant}
+        onChangeBgVariant={setBgVariant}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
